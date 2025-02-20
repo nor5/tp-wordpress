@@ -1,0 +1,134 @@
+
+services:
+  
+      
+  wordpress:
+    image: wordpress:latest
+    ports: 
+      - 8000:80
+    networks:
+      - wp-network   
+   
+    env_file:
+      - path : ./.env # Load environment variables from .env file
+    environment:
+      # configurate acces to  from environment variables
+      - WORDPRESS_DB_HOST=${WORDPRESS_DB_HOST}
+      - WORDPRESS_DB_USER=${MYSQL_USER}
+      - WORDPRESS_DB_PASSWORD=${MYSQL_PASSWORD}
+      - WORDPRESS_DB_NAME=${MYSQL_DATABASE}
+      
+
+    volumes:
+      - ./wp-content:/var/www/html/wp-content
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+       
+    
+    command: >
+      bash -c "curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && 
+      chmod +x wp-cli.phar && 
+      mv wp-cli.phar /usr/local/bin/wp &&
+      docker-entrypoint.sh apache2-foreground &&
+      sleep 10 && 
+      wp plugin install redis-cache --activate --allow-root &&
+      echo 'define('WP_REDIS_HOST', 'redis');' >> /var/www/html/wp-config.php &&
+      echo 'define('WP_CACHE', true);' >> /var/www/html/wp-config.php &&
+      wp redis enable --allow-root"
+    
+   
+  redis:
+    image: redis:latest
+    restart: always
+    networks:
+      - wp-network
+    command: ["redis-server", "--appendonly", "yes"]
+
+    volumes:
+      - redis-data:/data
+    
+    
+  
+  db:
+    image: mysql:8.0
+    restart: always
+    env_file:
+      - ./.env
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_RANDOM_ROOT_PASSWORD=${MYSQL_RANDOM_ROOT_PASSWORD}
+     
+      
+    volumes:
+      
+      - data-mysql:/var/lib/mysql
+    networks:
+      - wp-network # Attach to the wp-network
+      
+    healthcheck:
+        test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${MYSQL_USER}", "-p${MYSQL_PASSWORD}"] # command to run
+        interval: 10s # Frequency every 10 seconds
+        timeout: 5s # if no response after 5s the test is considred failed 
+        retries: 5 # 5 retries before considering the test failed 
+        start_period: 30s 
+  
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - wp-network # Attach to the wp-network
+    environment:
+      - ADMINER_DEFAULT_SERVER=${ADMINER_DEFAULT_SERVER}
+      - ADMINER_DESIGN=pepa-linha-dark # theme of adminer
+    depends_on:
+      db:
+        condition: service_healthy
+       
+   
+  prometheus:
+    image: prom/prometheus
+    
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090/tcp"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - wp-network # Attach to the wp-network
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+    networks:
+      - wp-network # Attach to the wp-network
+
+
+# Volumes for persistent data
+volumes:
+  wp-content:
+  data-mysql:
+  redis-data:
+
+# Networks for inter-container communication  
+networks:
+  wp-network:
+    driver: bridge
+
+    
+    
+  
+  
+  
