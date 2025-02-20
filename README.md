@@ -3,14 +3,15 @@
 
 ## Description
 
-This project aims to deploy a WordPress site with a MySQL database, Redis for caching, and Adminer for database administration using Docker Compose. The deployment is done 
+This project aims to deploy a WordPress site with a MySQL database, Redis for caching, and Adminer for database administration using Docker Compose. The deployment is done:
 - Locally on **Ubuntu 22.04** with:
     - **Docker version:** 23.0.4
     - **Docker Compose version:** v2.29.2-desktop.2 
 - ON an AWS VM instance running **Ubuntu 22.04** with:
     - **Docker version:** 27.5.1
     - **Docker Compose version:** v2.32.4 
-**Note** Note: The AWS VM instance does not run indefinitely; it shuts down after 8 hours of operation. You may not be able to access the provided link if the instance is not running.
+
+**Note** The AWS VM instance does not run indefinitely; it shuts down after 8 hours of operation. You may not be able to access the provided link if the instance is not running.
 ## Installation & Setup
 
 1. Navigate to the project directory:
@@ -39,7 +40,7 @@ This project aims to deploy a WordPress site with a MySQL database, Redis for ca
 ## Choices of configuration
 
 ### Adminer over phpMyAdmin:
-Why i choose Adminer because it is a lighter alternative to phpMyAdmin and supports multiple types of databases (MySQL, PostgreSQL, SQLite, etc.) in a single interface, and  also provides a better, friendlier user interface.
+I choose Adminer because it is a lighter alternative to phpMyAdmin and supports multiple types of databases (MySQL, PostgreSQL, SQLite, etc.) in a single interface, and  also provides a better, friendlier user interface.
 
 ### Environment Variables:
 
@@ -53,9 +54,9 @@ All services are connected to the Docker network **wp-network** to ensure commun
 
 ### Volumes:
 
-- wp-content: The volume ./wp-content is mounted to /var/www/html/wp-content to persist WordPress content, such as themes and plugins.
-- redis-data: The volume redis-data is mounted to /data to persist Redis data.
-- data-mysql: The volume data-mysql is mounted to /var/lib/mysql to persist MySQL data.
+- wp-content: The volume *./wp-content* is mounted to */var/www/html/wp-content* to persist WordPress content, such as themes and plugins.
+- redis-data: The volume *redis-data* is mounted to */data* to persist Redis data.
+- data-mysql: The volume *data-mysql* is mounted to */var/lib/mysql* to persist MySQL data.
 
 ### Challenges encountred:
 
