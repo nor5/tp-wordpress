@@ -32,6 +32,12 @@ This project aims to deploy a WordPress site with a MySQL database, Redis for ca
 
 **Note** You can access services on  [AWS VM](http://nor5-server.eddi.cloud:8000/) using http://nor5-server.eddi.cloud:port, replacing port with the appropriate service port.
 
+## Setup Grafana Dashboard
+To set up a Grafana dashboard for visualizing Docker metrics:
+1. **Connection to Prometheus:** in Grafana navigate to menu -> Connections -> Data source -> Add new data source -> Prometheus -> Set the Prometheus server URL to http://<Your_Private_ip_address>:9090.
+
+2. **Import Dashboard:** in Grafana navigate to menu -> Dashboard -> New -> import -> Enter 1229 as the dashboard ID (ID for docker metrics) -> Select the Prometheus data source and Import.
+
 ## Troubleshooting
 
 1. Check the logs of a specific container :
@@ -58,11 +64,13 @@ All services are connected to the Docker network **wp-network** to ensure commun
 - redis-data: The volume *redis-data* is mounted to */data* to persist Redis data.
 - data-mysql: The volume *data-mysql* is mounted to */var/lib/mysql* to persist MySQL data.
 
+
+
 ### Challenges encountred:
 
  1.  I encountered an issue while trying to install the Redis Cache plugin for WordPress using WP-CLI in my docker-compose file (without connecting to the container and executing the command `wp plugin install redis-cache --activate --allow-root`). WordPress wasn't fully initialized, and I encountered errors when running WP-CLI commands. I used a 10-second sleep to ensure that the WordPress container had finished loading the necessary services before attempting to install and activate the plugin.
 
-2.  Collect Docker metrics with Prometheus problems. Eccroding to the [docker documentation](https://docs.docker.com/engine/daemon/prometheus/) it was necessary to adjust the network configurations in prometheus.yml, and add this line`{"metrics-addr": "127.0.0.1:9323"}` to /etc/docker/daemon.json file to ensure proper access between the containers.
+2. I was having trouble collecting Docker metrics with Prometheus. I fixed it by creating the /etc/docker/daemon.json file, adding a cAdvisor service, and adjusting the prometheus.yml configuration with the correct private IP address and port as a target. 
 
 ## Future Improvements and perspectives 
 

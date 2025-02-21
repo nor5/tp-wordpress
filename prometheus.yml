@@ -17,19 +17,19 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
     - targets:
-      - <ip_adrr>:9090
+      - <Your_Private_ip_address>:9090
      
   
   - job_name: cadvisor
     scrape_interval: 5s
     static_configs:
     - targets:
-      - <ip_adrr>:8080
+      - <Your_Private_ip_address>:8080
 
 
   - job_name: docker
     scrape_interval: 5s
     static_configs:
-    - targets: ['<ip_adrr>:9323']
+    - targets: ['<Your_Private_ip_address>:9323']
     
 
