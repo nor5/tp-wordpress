@@ -14,13 +14,13 @@ jobs:
         uses: actions/checkout@v3
       
       - name: Copy compose.yml & prometheus.yml via SCP
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "./compose.yml"
-          target: ${{ env.TARGET_PATH }} 
+        env:
+        SSH_PRIVATE_KEY:$ {{ secrets.SSH_PRIVATE_KEY }}
+        
+        run: |
+        echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
+        scp -i private_key -o StrictHostKeyChecking=no docker-compose.yml  ${{ secrets.SERVER_USER }}@{{ secrets.SERVER_HOST }}:
+
         
       - name: Run multiple command to deploy
         uses: appleboy/ssh-action@v1.2.1
