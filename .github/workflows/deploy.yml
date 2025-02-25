@@ -1,0 +1,36 @@
+name: Deploy on Server with SCP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Copy compose.yml & prometheus.yml via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "../../compose.yml"
+          target: ${{ env.TARGET_PATH }} 
+        
+      - name: Run multiple command to deploy
+        uses: appleboy/ssh-action@v1.2.1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ${{ env.TARGET_PATH }}
+            docker-compose down
+            docker-compose up -d 
+            docker ps
+
