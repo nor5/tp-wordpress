@@ -1,4 +1,4 @@
-name: Deploy on Server with SCP
+name: Deploy on Server 
 
 on:
   push:
@@ -18,11 +18,11 @@ jobs:
         env:
           TARGET_PATH: ${{ env.TARGET_PATH }}
         run: |
-          ls
-          cd $TARGET_PATH
+          
           echo "copie to $TARGET_PATH"
           cp  compose.yml $TARGET_PATH
           echo "compose.yml successfully copied to $TARGET_PATH"
+          cd $TARGET_PATH"
           docker compose down
           docker compose up -d
           docker ps
