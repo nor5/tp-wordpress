@@ -16,9 +16,12 @@ jobs:
       - name: Copy compose.yml 
         
         env:
-          TARGET_PATH: ${{ secrets.TARGET_PATH }}
+          TARGET_PATH: ${{ env.TARGET_PATH }}
         run: |
-          cp compose.yml /home/student/
+          cp -f compose.yml $TARGET_PATH
+          echo "compose.yml successfully copied to $TARGET_PATH"
+          docker-compose down
+          docker-compose up -d
 
         
       
