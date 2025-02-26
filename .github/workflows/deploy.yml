@@ -15,9 +15,10 @@ jobs:
       
       - name: Copy compose.yml 
         
-        
+        env:
+          TARGET_PATH: ${{ secrets.TARGET_PATH }}
         run: |
-          cp compose.yml ${{ TARGET_PATH }}
+          cp compose.yml $TARGET_PATH
 
         
       
