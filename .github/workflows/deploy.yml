@@ -18,7 +18,7 @@ jobs:
         env:
           TARGET_PATH: ${{ secrets.TARGET_PATH }}
         run: |
-          cp compose.yml $TARGET_PATH
+          cp compose.yml /home/student/
 
         
       
