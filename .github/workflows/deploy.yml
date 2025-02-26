@@ -16,13 +16,12 @@ jobs:
       - name: Copy compose.yml & restart Docker services
         
         env:
-          TARGET_PATH: ${{ env.TARGET_PATH }}
+          TARGET_PATH: ${{ vars.TARGET_PATH }}
         run: |
-          
           echo "copie to $TARGET_PATH"
-          cp  compose.yml $TARGET_PATH
+          cp  compose.yml "$TARGET_PATH"
           echo "compose.yml successfully copied to $TARGET_PATH"
-          cd $TARGET_PATH"
+          cd "$TARGET_PATH"
           docker compose down
           docker compose up -d
           docker ps
