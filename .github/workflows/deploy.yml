@@ -13,15 +13,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       
-      - name: Copy compose.yml 
+      - name: Copy compose.yml & restart Docker services
         
         env:
           TARGET_PATH: ${{ env.TARGET_PATH }}
         run: |
           cp -f compose.yml $TARGET_PATH
           echo "compose.yml successfully copied to $TARGET_PATH"
-          docker-compose down
-          docker-compose up -d
+          docker compose down
+          docker compose up -d
+          docker ps
 
         
       
