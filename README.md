@@ -26,8 +26,8 @@ This project aims to deploy a WordPress site with a MySQL database, Redis for ca
 | Service   | URL                          |  Description                                                                                |
 |-----------|------------------------------|---------------------------------------------------------------------------------------------|
 | WordPress | http://127.0.0.1:8000        | Access the WordPress website. Use credentials from the .env file to log in as admin or user.|
-| Adminer   | http://127.0.0.1:8080        | Database management interface. Credentials are stored in .env.                              |
-| Prometheus| http://127.0.0.1:9090/targets| Monitoring interface to check available metrics.                                    |
+| Adminer   | http://127.0.0.1:8088        | Database management interface. Credentials are stored in .env.                              |
+| Prometheus| http://127.0.0.1:9090/targets| Monitoring interface to check available metrics.                                            |
 | Grafana   | http://127.0.0.1:3000        | Visualization and dashboard management. Default admin credentials: admin/admin.             |
 
 **Note** You can access services on  [AWS VM](http://nor5-server.eddi.cloud:8000/) using http://nor5-server.eddi.cloud:port, replacing port with the appropriate service port.

@@ -18,6 +18,7 @@ jobs:
         env:
           TARGET_PATH: ${{ env.TARGET_PATH }}
         run: |
+          echo "copie to $TARGET_PATH"
           cp -f compose.yml $TARGET_PATH
           echo "compose.yml successfully copied to $TARGET_PATH"
           docker compose down
