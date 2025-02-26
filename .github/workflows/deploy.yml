@@ -15,7 +15,7 @@ jobs:
       
       - name: Copy compose.yml & prometheus.yml via SCP
         env:
-        SSH_PRIVATE_KEY:${{ secrets.SSH_PRIVATE_KEY }}
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         
         run: |
         echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
